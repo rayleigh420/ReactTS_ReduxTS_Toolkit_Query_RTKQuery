@@ -6,42 +6,43 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { RootState } from "../../app/store"
 import { Todo } from "../../types/todoTypes"
 import AddTodoForm from "./AddTodoForm"
-import { deleteTodo, getTodo, getTodoError, getTodoStatus, selectAllTodo, udpateTodo } from "./todoSlice"
+import { useGetTodoQuery } from "./todoSlice"
 
 const TodoList = () => {
 
-    const todos = useAppSelector((state: RootState) => selectAllTodo(state))
-    const status = useAppSelector(getTodoStatus)
-    const error = useAppSelector(getTodoError)
+    // const todos = useAppSelector((state: RootState) => selectAllTodo(state))
+    // const status = useAppSelector(getTodoStatus)
+    // const error = useAppSelector(getTodoError)
 
-    const dispatch = useAppDispatch()
+    // const dispatch = useAppDispatch()
+    const { data: todos, isFetching, isError, isSuccess, error } = useGetTodoQuery()
 
-    useEffect(() => {
-        // const getData = async () => {
-        //     let result = await axios.get('http://localhost:3500/todos')
-        //     console.log(result.data)
-        //     dispatch(fetchData(result.data))
-        // }
+    // useEffect(() => {
+    //     // const getData = async () => {
+    //     //     let result = await axios.get('http://localhost:3500/todos')
+    //     //     console.log(result.data)
+    //     //     dispatch(fetchData(result.data))
+    //     // }
 
-        // getData()
+    //     // getData()
 
-        if (status == 'idle') {
-            dispatch(getTodo())
-        }
-    }, [status, dispatch])
+    //     if (status == 'idle') {
+    //         dispatch(getTodo())
+    //     }
+    // }, [status, dispatch])
 
     const changeComplete = (todo: Todo) => {
-        dispatch(udpateTodo(todo))
+        // dispatch(udpateTodo(todo))
     }
 
     const deleteTodos = (todo: Todo) => {
-        dispatch(deleteTodo(todo))
+        // dispatch(deleteTodo(todo))
     }
 
     let content;
-    if (status == 'loading') {
+    if (isFetching) {
         content = <p>Loading</p>
-    } else if (status == 'successed') {
+    } else if (isSuccess) {
         content = todos.map((todo) => {
             return (
                 <article key={todo.id}>
@@ -62,8 +63,8 @@ const TodoList = () => {
                 </article>
             );
         });
-    } else if (status == 'failed') {
-        content = <p>{error}</p>
+    } else if (isError) {
+        content = <p>Error</p>
     }
 
     return (

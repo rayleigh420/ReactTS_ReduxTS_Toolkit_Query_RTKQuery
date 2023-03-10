@@ -2,7 +2,7 @@ import { faUpload } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
-import { addTodo } from "./todoSlice"
+// import { addTodo } from "./todoSlice"
 
 const AddTodoForm = () => {
     const [newTodo, setNewTodo] = useState<string>('')
@@ -12,11 +12,11 @@ const AddTodoForm = () => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch(addTodo({
-            userID: 1,
-            title: newTodo,
-            completed: false
-        }))
+        // dispatch(addTodo({
+        //     userID: 1,
+        //     title: newTodo,
+        //     completed: false
+        // }))
         setNewTodo('')
     }
 
