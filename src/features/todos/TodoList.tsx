@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { RootState } from "../../app/store"
 import { Todo } from "../../types/todoTypes"
 import AddTodoForm from "./AddTodoForm"
-import { useGetTodoQuery } from "./todoSlice"
+import { useGetTodoQuery, useUpdateTodoMutation } from "./todoSlice"
 
 const TodoList = () => {
 
@@ -16,6 +16,7 @@ const TodoList = () => {
 
     // const dispatch = useAppDispatch()
     const { data: todos, isFetching, isError, isSuccess, error } = useGetTodoQuery()
+    const [udpateTodo, result] = useUpdateTodoMutation()
 
     // useEffect(() => {
     //     // const getData = async () => {
@@ -33,6 +34,7 @@ const TodoList = () => {
 
     const changeComplete = (todo: Todo) => {
         // dispatch(udpateTodo(todo))
+        udpateTodo(todo)
     }
 
     const deleteTodos = (todo: Todo) => {

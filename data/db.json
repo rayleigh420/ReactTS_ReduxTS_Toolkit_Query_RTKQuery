@@ -1221,8 +1221,14 @@
     {
       "userID": 1,
       "title": "test provideTag and invalidTag in RTK Query ver3",
-      "completed": false,
+      "completed": true,
       "id": 1013
+    },
+    {
+      "userID": 1,
+      "title": "update todo",
+      "completed": true,
+      "id": 1014
     }
   ]
 }
