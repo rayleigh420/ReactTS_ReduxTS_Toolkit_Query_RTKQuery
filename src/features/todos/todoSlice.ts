@@ -23,10 +23,18 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 body: initialTodo
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
+        }),
+        deleteTodo: builder.mutation<Todo, Todo>({
+            query: ({ id }) => ({
+                url: `todos/${id}`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
         })
     })
 })
 
-export const { useGetTodoQuery, useAddTodoMutation, useUpdateTodoMutation } = extendedApiSlice
+export const { useGetTodoQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation } = extendedApiSlice
 
 
