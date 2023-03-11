@@ -33,20 +33,30 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: initialTodo
             }),
+            // async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
+            //     const patchResult = dispatch(
+            //         extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+            //             draft.entities[initialTodo.id!] = initialTodo
+            //         })
+            //     )
+            //     try {
+            //         await queryFulfilled
+            //     } catch {
+            //         // Nếu như có quá nhiều request cùng lúc dùng để mutate thì việc xảy ra error rất dễ gây mấy đồng bộ
+            //         // Việc sử dụng undo là không an toàn, do đó có thể re fetch lại data chính xác ở database hoặc server
+            //         // dispatch(api.util.invalidateTags([type: 'Todo', id: initialTodo.id])) // gọi lại getTodo()
+            //         patchResult.undo()
+            //     }
+            // },
             async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
-                const patchResult = dispatch(
-                    extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
-                        draft.entities[initialTodo.id!] = initialTodo
-                    })
-                )
                 try {
-                    await queryFulfilled
-                } catch {
-                    // Nếu như có quá nhiều request cùng lúc dùng để mutate thì việc xảy ra error rất dễ gây mấy đồng bộ
-                    // Việc sử dụng undo là không an toàn, do đó có thể re fetch lại data chính xác ở database hoặc server
-                    // dispatch(api.util.invalidateTags([type: 'Todo', id: initialTodo.id])) // gọi lại getTodo()
-                    patchResult.undo()
-                }
+                    const { data: updateTodo } = await queryFulfilled
+                    const patchResult = dispatch(
+                        extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                            draft.entities[updateTodo.id!] = updateTodo
+                        })
+                    )
+                } catch { }
             },
             // invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
         }),
@@ -60,6 +70,22 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         })
     })
 })
+
+// Note:
+
+// Gọi thời gian gọi request đến server là s (cho bất cứ request nào)
+
+// Update: Người dùng chờ s giây đầu tiên để gửi request update về cho server. Sau đó server gửi kết quả về
+// Nếu kết quả thành công thì invalidatesTag tiếp tục trigger để refetch lại dữ liệu và ta sẽ chờ thêm s giây nữa
+// Tổng thời gian chờ màn hình: (trải nghiệm chờ): 2.s giây
+
+// Optimistic: Cập nhật dữ liệu cache trước khi send request, và màn hình UI sẽ cập nhật ngay lập tức.
+// Nếu sau khi call api và thấy lỗi hoặc dữ liệu trả về không khớp với dự đoán thì sẽ undo lại cache ban đầu.
+// Không cần gọi endpoint fetch lại dữ liệu. Có nghĩa người dùng thấy màn hình update ngay lập tức. Thời gian chờ là 0
+
+// Pessimistic: Cập nhật dữ liệu cache sau khi send request. Tức là sẽ đợi kết quả tử server
+// Nếu sau khi call api và thấy lỗi thì ta handle và hiện lên cho người dùng
+// Không cần gọi endpoint fetch lại dữ liệu. Có nghĩa người thấy màn hình update sau s giây. Thời gian này là thời gian gửi request để update.
 
 export const { useGetTodoQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation } = extendedApiSlice
 
