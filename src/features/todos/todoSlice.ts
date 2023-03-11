@@ -33,14 +33,19 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: initialTodo
             }),
-            // async onQueryStarted(initialTodo, {dispatch, queryFulfilled}) {
-            //     const pathResult = dispatch(
-            //         extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
-
-            //         })
-            //     )
-            // },
-            invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
+            async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                        draft.entities[initialTodo.id!] = initialTodo
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
+            // invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
         }),
         deleteTodo: builder.mutation<Todo, Todo>({
             query: ({ id }) => ({
