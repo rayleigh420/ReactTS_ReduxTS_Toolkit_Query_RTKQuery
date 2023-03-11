@@ -42,6 +42,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 try {
                     await queryFulfilled
                 } catch {
+                    // Nếu như có quá nhiều request cùng lúc dùng để mutate thì việc xảy ra error rất dễ gây mấy đồng bộ
+                    // Việc sử dụng undo là không an toàn, do đó có thể re fetch lại data chính xác ở database hoặc server
+                    // dispatch(api.util.invalidateTags([type: 'Todo', id: initialTodo.id])) // gọi lại getTodo()
                     patchResult.undo()
                 }
             },
