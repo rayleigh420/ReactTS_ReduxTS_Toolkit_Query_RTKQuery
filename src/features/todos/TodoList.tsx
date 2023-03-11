@@ -47,7 +47,8 @@ const TodoList = () => {
     if (isFetching) {
         content = <p>Loading</p>
     } else if (isSuccess) {
-        content = todos.map((todo) => {
+        content = todos.ids.map((id) => {
+            const todo = todos.entities[id]!
             return (
                 <article key={todo.id}>
                     <div className="todo">

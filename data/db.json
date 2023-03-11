@@ -1229,6 +1229,12 @@
       "title": "update todo",
       "completed": true,
       "id": 1014
+    },
+    {
+      "userID": 1,
+      "title": "test optimistic update",
+      "completed": false,
+      "id": 1015
     }
   ]
 }
