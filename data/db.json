@@ -1227,7 +1227,7 @@
     {
       "userID": 1,
       "title": "update todo",
-      "completed": false,
+      "completed": true,
       "id": 1014
     }
   ]

@@ -6,7 +6,8 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         // Generic types theo thu tu la kieu resopone tra ve va agrument
         getTodo: builder.query<Todo[], void>({
             query: () => 'todos',
-            transformResponse: (res: Todo[]) => res.sort((a: Required<Todo>, b: Required<Todo>) => b.id - a.id),
+            // transformResponse: (res: Todo[]) => res.sort((a: Required<Todo>, b: Required<Todo>) => b.id - a.id),
+            transformResponse: (res: Todo[]) => res.sort((a: Todo, b: Todo) => b.id! - a.id!),
             providesTags: (result, error, arg) => [...(result?.map(({ id }) => ({ type: 'Todo' as const, id })) || []), { type: 'Todo' as const, id: 'LIST' }]
         }),
         addTodo: builder.mutation<Todo, Todo>({
