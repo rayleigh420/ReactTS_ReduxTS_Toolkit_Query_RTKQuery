@@ -2,7 +2,7 @@ import { faUpload } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
-import { useAddTodoMutation } from "./todoSlice"
+import { useAddTodoMutation, useErrorTodoMutation } from "./todoSlice"
 // import { addTodo } from "./todoSlice"
 
 const AddTodoForm = () => {
@@ -10,17 +10,24 @@ const AddTodoForm = () => {
     const dispatch = useAppDispatch()
 
     const [addTodo, { isLoading, isSuccess }] = useAddTodoMutation()
+    const [errorTodo] = useErrorTodoMutation()
 
     const changeTodo = (e: ChangeEvent<HTMLInputElement>) => setNewTodo(e.target.value)
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        addTodo({
-            userID: 1,
-            title: newTodo,
-            completed: false
-        })
-        setNewTodo('')
+        if (newTodo.length > 0) {
+            addTodo({
+                userID: 1,
+                title: newTodo,
+                completed: false
+            })
+            setNewTodo('')
+        }
+    }
+
+    const handleErrorTodo = () => {
+        errorTodo()
     }
 
     return (
@@ -38,6 +45,7 @@ const AddTodoForm = () => {
             <button className="submit">
                 <FontAwesomeIcon icon={faUpload} />
             </button>
+            <button onClick={handleErrorTodo}>Error</button>
         </form>
     )
 }

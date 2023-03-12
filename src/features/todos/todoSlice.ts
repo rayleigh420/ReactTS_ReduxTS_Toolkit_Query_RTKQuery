@@ -93,6 +93,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 }
             }
             // invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
+        }),
+        errorTodo: builder.mutation<void, void>({
+            query: () => {
+                throw Error('Error Todo')
+            }
         })
     })
 })
@@ -113,6 +118,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 // Nếu sau khi call api và thấy lỗi thì ta handle và hiện lên cho người dùng
 // Không cần gọi endpoint fetch lại dữ liệu. Có nghĩa người thấy màn hình update sau s giây. Thời gian này là thời gian gửi request để update.
 
-export const { useGetTodoQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation } = extendedApiSlice
+export const { useGetTodoQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation, useErrorTodoMutation } = extendedApiSlice
 
 
