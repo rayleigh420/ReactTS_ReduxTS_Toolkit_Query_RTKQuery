@@ -1275,7 +1275,7 @@
     {
       "userID": 1,
       "title": "test pessimistic with add todo with sort ver2",
-      "completed": false,
+      "completed": true,
       "id": 1022
     }
   ]

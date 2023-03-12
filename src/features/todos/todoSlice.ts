@@ -78,7 +78,21 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
                 body: { id }
             }),
-            invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
+            async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                        delete draft.entities[id!]
+                        const index = draft.ids.indexOf(id!)
+                        draft.ids.splice(index, 1)
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            }
+            // invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
         })
     })
 })
