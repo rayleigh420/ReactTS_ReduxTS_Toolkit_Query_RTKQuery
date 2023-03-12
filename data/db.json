@@ -1233,14 +1233,50 @@
     {
       "userID": 1,
       "title": "test optimistic update",
-      "completed": false,
+      "completed": true,
       "id": 1015
     },
     {
       "userID": 1,
       "title": "test pessimistic update",
-      "completed": false,
+      "completed": true,
       "id": 1016
+    },
+    {
+      "userID": 1,
+      "title": "with delay = 0",
+      "completed": true,
+      "id": 1017
+    },
+    {
+      "userID": 1,
+      "title": "next time",
+      "completed": false,
+      "id": 1018
+    },
+    {
+      "userID": 1,
+      "title": "test pessimistic with add todo",
+      "completed": false,
+      "id": 1019
+    },
+    {
+      "userID": 1,
+      "title": "test pessimistic with add todo ver2",
+      "completed": false,
+      "id": 1020
+    },
+    {
+      "userID": 1,
+      "title": " test pessimistic with add todo with sort",
+      "completed": false,
+      "id": 1021
+    },
+    {
+      "userID": 1,
+      "title": "test pessimistic with add todo with sort ver2",
+      "completed": false,
+      "id": 1022
     }
   ]
 }

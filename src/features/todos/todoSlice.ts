@@ -25,7 +25,18 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: initialTodo
             }),
-            invalidatesTags: [{ type: 'Todo', id: 'LIST' }]
+            async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
+                try {
+                    const { data: addTodo } = await queryFulfilled
+                    const patchResult = dispatch(
+                        extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                            draft.entities[addTodo.id!] = addTodo
+                            draft.ids.unshift(addTodo.id!)
+                        })
+                    )
+                } catch { }
+            }
+            // invalidatesTags: [{ type: 'Todo', id: 'LIST' }]
         }),
         updateTodo: builder.mutation<Todo, Todo>({
             query: initialTodo => ({
@@ -33,31 +44,32 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: initialTodo
             }),
-            // async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
-            //     const patchResult = dispatch(
-            //         extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
-            //             draft.entities[initialTodo.id!] = initialTodo
-            //         })
-            //     )
-            //     try {
-            //         await queryFulfilled
-            //     } catch {
-            //         // Nếu như có quá nhiều request cùng lúc dùng để mutate thì việc xảy ra error rất dễ gây mấy đồng bộ
-            //         // Việc sử dụng undo là không an toàn, do đó có thể re fetch lại data chính xác ở database hoặc server
-            //         // dispatch(api.util.invalidateTags([type: 'Todo', id: initialTodo.id])) // gọi lại getTodo()
-            //         patchResult.undo()
-            //     }
-            // },
             async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                        draft.entities[initialTodo.id!] = initialTodo
+                    })
+                )
                 try {
-                    const { data: updateTodo } = await queryFulfilled
-                    const patchResult = dispatch(
-                        extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
-                            draft.entities[updateTodo.id!] = updateTodo
-                        })
-                    )
-                } catch { }
+                    await queryFulfilled
+                } catch {
+                    // Nếu như có quá nhiều request cùng lúc dùng để mutate thì việc xảy ra error rất dễ gây mấy đồng bộ
+                    // Việc sử dụng undo là không an toàn, do đó có thể re fetch lại data chính xác ở database hoặc server
+                    // dispatch(api.util.invalidateTags([type: 'Todo', id: initialTodo.id])) // gọi lại getTodo()
+                    patchResult.undo()
+                }
             },
+            // async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
+            //     try {
+            //         const { data: updateTodo } = await queryFulfilled
+            //         const patchResult = dispatch(
+            //             extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+            //                 draft.entities[updateTodo.id!] = updateTodo
+            //             })
+            //         )
+            //         console.log(patchResult)
+            //     } catch { }
+            // },
             // invalidatesTags: (result, error, arg) => [{ type: 'Todo', id: arg.id }]
         }),
         deleteTodo: builder.mutation<Todo, Todo>({
