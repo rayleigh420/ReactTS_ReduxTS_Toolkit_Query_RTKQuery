@@ -9,29 +9,17 @@ import AddTodoForm from "./AddTodoForm"
 import { useDeleteTodoMutation, useGetTodoQuery, useUpdateTodoMutation } from "./todoSlice"
 
 const TodoList = () => {
-
-    // const todos = useAppSelector((state: RootState) => selectAllTodo(state))
-    // const status = useAppSelector(getTodoStatus)
-    // const error = useAppSelector(getTodoError)
-
-    // const dispatch = useAppDispatch()
-    const { data: todos, isFetching, isError, isSuccess, error } = useGetTodoQuery()
+    // Refetch function force RTK query fetch all data again
+    // Config them refetchOnMouseOrArgChange: fetch lai data theo dieu kien them vao
+    // RefechOnMouseFocus: khi focus vao trang thi se fetch
+    // RefetchOnReConnect: khi co mang hay mat mang se fetch
+    // Viec fetch lai data se fetch vao cache chu khong phai goi lai hook nen se khong co hieu ung loading //
+    // Voi polling thi no se goi lai hook nen se co hieu ung loading
+    const { data: todos, isFetching, isError, isSuccess, error, refetch } = useGetTodoQuery(undefined, {
+        pollingInterval: 50000000 // 
+    })
     const [udpateTodo, updateTodoResult] = useUpdateTodoMutation()
     const [deleteTodo, deleteTodoResult] = useDeleteTodoMutation()
-
-    // useEffect(() => {
-    //     // const getData = async () => {
-    //     //     let result = await axios.get('http://localhost:3500/todos')
-    //     //     console.log(result.data)
-    //     //     dispatch(fetchData(result.data))
-    //     // }
-
-    //     // getData()
-
-    //     if (status == 'idle') {
-    //         dispatch(getTodo())
-    //     }
-    // }, [status, dispatch])
 
     const changeComplete = (todo: Todo) => {
         // dispatch(udpateTodo(todo))
@@ -77,6 +65,7 @@ const TodoList = () => {
             <h1>Todo List</h1>
             <AddTodoForm />
             {content}
+            <button onClick={refetch}>Refetch</button>
         </main>
     )
 }
