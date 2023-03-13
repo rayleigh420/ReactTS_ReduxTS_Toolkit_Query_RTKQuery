@@ -45,7 +45,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 try {
                     const { data: addTodo } = await queryFulfilled
                     const patchResult = dispatch(
-                        extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                        extendedApiSlice.util.updateQueryData('getTodo', 1, (draft) => {
                             draft.entities[addTodo.id!] = addTodo
                             draft.ids.unshift(addTodo.id!)
                         })
@@ -62,7 +62,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             }),
             async onQueryStarted(initialTodo, { dispatch, queryFulfilled }) {
                 const patchResult = dispatch(
-                    extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                    extendedApiSlice.util.updateQueryData('getTodo', 1, (draft) => {
                         draft.entities[initialTodo.id!] = initialTodo
                     })
                 )
@@ -96,7 +96,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             }),
             async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
                 const patchResult = dispatch(
-                    extendedApiSlice.util.updateQueryData('getTodo', undefined, (draft) => {
+                    extendedApiSlice.util.updateQueryData('getTodo', 1, (draft) => {
                         delete draft.entities[id!]
                         const index = draft.ids.indexOf(id!)
                         draft.ids.splice(index, 1)
