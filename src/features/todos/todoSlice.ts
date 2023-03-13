@@ -12,7 +12,19 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         // Generic types theo thu tu la kieu resoponse tra ve va agrument
         getTodo: builder.query<EntityState<Todo>, void>({
-            query: () => 'todos',
+            query: () => {
+
+                return {
+                    url: 'todos',
+                    headers: {
+                        RTK_Query_Header: 'RTK_Query_Duy'
+                    },
+                    params: {
+                        first_name: 'Le',
+                        'last-name': 'Duy'
+                    }
+                }
+            },
             // transformResponse: (res: Todo[]) => res.sort((a: Required<Todo>, b: Required<Todo>) => b.id - a.id),
             // transformResponse: (res: Todo[]) => res.sort((a: Todo, b: Todo) => b.id! - a.id!),
             transformResponse: (res: Todo[]) => todosAdapter.setAll(initialState, res),
