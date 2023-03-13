@@ -11,8 +11,8 @@ const initialState = todosAdapter.getInitialState()
 export const extendedApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         // Generic types theo thu tu la kieu resoponse tra ve va agrument
-        getTodo: builder.query<EntityState<Todo>, void>({
-            query: () => {
+        getTodo: builder.query<EntityState<Todo>, number>({
+            query: (page = 1) => {
 
                 return {
                     url: 'todos',
@@ -20,6 +20,10 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                         RTK_Query_Header: 'RTK_Query_Duy'
                     },
                     params: {
+                        _page: page,
+                        _limit: 20,
+                        _sort: 'id',
+                        _order: "desc",
                         first_name: 'Le',
                         'last-name': 'Duy'
                     }

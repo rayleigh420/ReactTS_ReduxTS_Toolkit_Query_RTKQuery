@@ -1,7 +1,7 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios from "axios"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { RootState } from "../../app/store"
 import { Todo } from "../../types/todoTypes"
@@ -9,13 +9,15 @@ import AddTodoForm from "./AddTodoForm"
 import { useDeleteTodoMutation, useGetTodoQuery, useUpdateTodoMutation } from "./todoSlice"
 
 const TodoList = () => {
+
+    const [page, setPage] = useState<number>(1)
     // Refetch function force RTK query fetch all data again
     // Config them refetchOnMouseOrArgChange: fetch lai data theo dieu kien them vao
     // RefechOnMouseFocus: khi focus vao trang thi se fetch
     // RefetchOnReConnect: khi co mang hay mat mang se fetch
     // Viec fetch lai data se fetch vao cache chu khong phai goi lai hook nen se khong co hieu ung loading //
     // Voi polling thi no se goi lai hook nen se co hieu ung loading
-    const { data: todos, isFetching, isError, isSuccess, error, refetch } = useGetTodoQuery(undefined, {
+    const { data: todos, isFetching, isError, isSuccess, error, refetch } = useGetTodoQuery(page, {
         pollingInterval: 50000000 // 
     })
     const [udpateTodo, updateTodoResult] = useUpdateTodoMutation()
@@ -66,6 +68,10 @@ const TodoList = () => {
             <AddTodoForm />
             {content}
             <button onClick={refetch}>Refetch</button>
+            <div className="page">
+                <button onClick={() => setPage(prev => prev - 1)} disabled={page == 1}>Prev</button>
+                <button onClick={() => setPage(prev => prev + 1)} disabled={page == 3}>Next</button>
+            </div>
         </main>
     )
 }

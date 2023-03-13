@@ -1,3 +1,0 @@
-Student Management System: Student, Teacher, Course, Class, Student's Parent
-Teacher Management: Teacher, Coures, Class, Department
-Timetabling System: Teacher, Course, Class, Room, Semester
