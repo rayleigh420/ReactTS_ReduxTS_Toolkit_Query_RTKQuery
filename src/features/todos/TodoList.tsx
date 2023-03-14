@@ -1,14 +1,17 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { RootState } from "../../app/store"
 import { Todo } from "../../types/todoTypes"
 import AddTodoForm from "./AddTodoForm"
-import { useDeleteTodoMutation, useGetTodoQuery, useUpdateTodoMutation } from "./todoSlice"
+import { useDeleteTodoMutation, useGetTodoQuery, usePrefetch, useUpdateTodoMutation } from "./todoSlice"
 
 const TodoList = () => {
+
+    const prefetchTodoNextPage = usePrefetch('getTodo')
+
 
     const [page, setPage] = useState<number>(1)
     // Refetch function force RTK query fetch all data again
@@ -22,6 +25,10 @@ const TodoList = () => {
     })
     const [udpateTodo, updateTodoResult] = useUpdateTodoMutation()
     const [deleteTodo, deleteTodoResult] = useDeleteTodoMutation()
+
+    const prefetchPage = useCallback(() => {
+        prefetchTodoNextPage(page + 1)
+    }, [page, prefetchTodoNextPage])
 
     const changeComplete = (todo: Todo) => {
         // dispatch(udpateTodo(todo))
@@ -65,12 +72,12 @@ const TodoList = () => {
     return (
         <main>
             <h1>Todo List</h1>
-            <AddTodoForm />
+            <AddTodoForm page={page} setPage={setPage} />
             {content}
             <button onClick={refetch}>Refetch</button>
             <div className="page">
                 <button onClick={() => setPage(prev => prev - 1)} disabled={page == 1}>Prev</button>
-                <button onClick={() => setPage(prev => prev + 1)} disabled={page == 3}>Next</button>
+                <button onClick={() => setPage(prev => prev + 1)} disabled={page == 3} onMouseEnter={prefetchPage}>Next</button>
             </div>
         </main>
     )

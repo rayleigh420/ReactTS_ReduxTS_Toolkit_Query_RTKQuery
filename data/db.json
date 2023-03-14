@@ -1305,8 +1305,14 @@
     {
       "userID": 1,
       "title": "test page in page 2",
-      "completed": false,
+      "completed": true,
       "id": 1027
+    },
+    {
+      "userID": 1,
+      "title": "test reset page when addTodo",
+      "completed": false,
+      "id": 1028
     }
   ]
 }

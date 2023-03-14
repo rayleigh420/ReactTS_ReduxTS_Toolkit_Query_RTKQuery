@@ -134,6 +134,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
 // Nếu sau khi call api và thấy lỗi thì ta handle và hiện lên cho người dùng
 // Không cần gọi endpoint fetch lại dữ liệu. Có nghĩa người thấy màn hình update sau s giây. Thời gian này là thời gian gửi request để update.
 
-export const { useGetTodoQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation, useErrorTodoMutation } = extendedApiSlice
+export const { useGetTodoQuery, useAddTodoMutation, useUpdateTodoMutation, useDeleteTodoMutation, useErrorTodoMutation, usePrefetch } = extendedApiSlice
 
 

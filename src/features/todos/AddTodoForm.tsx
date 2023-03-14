@@ -1,11 +1,16 @@
 import { faUpload } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
-import { useAddTodoMutation, useErrorTodoMutation } from "./todoSlice"
+import { useAddTodoMutation, useErrorTodoMutation, usePrefetch } from "./todoSlice"
 // import { addTodo } from "./todoSlice"
 
-const AddTodoForm = () => {
+interface AddTodoFormProps {
+    page: number,
+    setPage: Dispatch<SetStateAction<number>>
+}
+
+const AddTodoForm = ({ page, setPage }: AddTodoFormProps) => {
     const [newTodo, setNewTodo] = useState<string>('')
     const dispatch = useAppDispatch()
 
@@ -23,6 +28,8 @@ const AddTodoForm = () => {
                 completed: false
             })
             setNewTodo('')
+            if (page != 1)
+                setPage(1)
         }
     }
 
